@@ -4,22 +4,22 @@ import { Menu, X, FileText, ChevronDown, Package, Wrench, ArrowRight } from 'luc
 
 const menuProduits = [
   {
-    titre: '🔥 Incendie',
+    titre: ' Incendie',
     items: ['Extincteur', 'RIA', 'PIA', 'Lance incendie', 'Poteaux incendie'],
     slug: 'securite-incendie',
   },
   {
-    titre: '💨 Détection gaz',
+    titre: ' Détection gaz',
     items: ['Détecteur portable', 'Détecteur fixe', 'Balise de détection', 'Éthylotest'],
     slug: 'detection-de-gaz',
   },
   {
-    titre: '🦺 EPI',
+    titre: ' EPI',
     items: ['Chaussures de sécurité', 'Casque', 'Protection auditive', 'Vêtements de travail'],
     slug: 'epi',
   },
   {
-    titre: '🚧 Signalisation',
+    titre: ' Signalisation',
     items: ['Cônes', 'Ruban de signalisation', 'Panneaux', 'Traçeur de chantier'],
     slug: 'signalisation',
   },
@@ -27,15 +27,15 @@ const menuProduits = [
 
 const menuServices = [
   {
-    titre: '🎓 Formation',
+    titre: ' Formation',
     items: ['Sécurité incendie', 'Premiers secours', 'Utilisation EPI'],
   },
   {
-    titre: '🔧 Maintenance',
+    titre: ' Maintenance',
     items: ['Extincteurs', 'Détecteurs de gaz', 'Vérification EPI'],
   },
   {
-    titre: '📋 Conseil & Audit',
+    titre: ' Conseil & Audit',
     items: ['Audit sécurité site', 'Plan de prévention', 'Étude des risques'],
   },
 ]

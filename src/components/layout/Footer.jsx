@@ -58,10 +58,10 @@ export default function Footer() {
             <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest" style={{ color: '#C0392B' }}>Produits</h4>
             <ul className="space-y-2.5 text-sm">
               {[
-                { label: '🔥 Sécurité incendie', to: '/boutique?cat=securite-incendie' },
-                { label: '💨 Détection de gaz', to: '/boutique?cat=detection-de-gaz' },
-                { label: '🦺 EPI', to: '/boutique?cat=epi' },
-                { label: '🚧 Signalisation', to: '/boutique?cat=signalisation' },
+                { label: ' Sécurité incendie', to: '/boutique?cat=securite-incendie' },
+                { label: ' Détection de gaz', to: '/boutique?cat=detection-de-gaz' },
+                { label: ' EPI', to: '/boutique?cat=epi' },
+                { label: ' Signalisation', to: '/boutique?cat=signalisation' },
               ].map(item => (
                 <li key={item.to}>
                   <Link to={item.to} className="hover:text-white transition-colors">{item.label}</Link>

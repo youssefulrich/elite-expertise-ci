@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Phone, Mail, MapPin, Facebook, Linkedin, Instagram } from 'lucide-react'
+import { Phone, Mail, MapPin, Facebook, Linkedin, Instagram, Flame, Wind, HardHat, Triangle, ArrowRight, Shield } from 'lucide-react'
 
-// Lucide n'a pas d'icône TikTok native, on la dessine en SVG inline
 function TikTokIcon({ size = 15 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -17,36 +16,72 @@ const reseauxSociaux = [
   { nom: 'LinkedIn', url: 'https://www.linkedin.com/in/tecsecur-ci-81ba11416', icon: Linkedin },
 ]
 
+const produits = [
+  { label: 'Sécurité incendie', to: '/boutique?cat=securite-incendie', icon: Flame },
+  { label: 'Détection de gaz', to: '/boutique?cat=detection-de-gaz', icon: Wind },
+  { label: 'EPI', to: '/boutique?cat=epi', icon: HardHat },
+  { label: 'Signalisation', to: '/boutique?cat=signalisation', icon: Triangle },
+]
+
+const navigation = [
+  { label: 'Accueil', to: '/' },
+  { label: 'Réalisations', to: '/realisations' },
+  { label: 'Boutique', to: '/boutique' },
+  { label: 'À propos', to: '/contact' },
+  { label: 'Demander un devis', to: '/contact' },
+]
+
 export default function Footer() {
   return (
     <footer style={{ background: '#1C1C1E' }} className="text-gray-400">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 
-          {/* Logo + description */}
+      <style>{`
+        @keyframes footerPulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .footer-link { position: relative; display: inline-block; }
+        .footer-link::after {
+          content: ''; position: absolute; bottom: -1px; left: 0; width: 0;
+          height: 1px; background: #C0392B;
+          transition: width 0.25s ease;
+        }
+        .footer-link:hover::after { width: 100%; }
+        .footer-link:hover { color: #fff !important; }
+        .social-btn { transition: background 0.2s, transform 0.2s; }
+        .social-btn:hover { transform: translateY(-2px); }
+      `}</style>
+
+      {/* Bande supérieure rouge */}
+      <div style={{ height: '3px', background: 'linear-gradient(90deg, transparent, #C0392B 30%, #C0392B 70%, transparent)' }} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+
+          {/* Logo + description + réseaux */}
           <div className="md:col-span-1">
-            <img
-              src="/logo.png"
-              alt="TecSecur"
-              className="h-10 w-auto object-contain mb-4"
-            />
-            <p className="text-sm leading-relaxed">
-              Équipements de sécurité industrielle performants pour les entreprises et industries de Côte d'Ivoire.
+            <Link to="/">
+              <img src="/logo.png" alt="TecSecur" className="h-10 w-auto object-contain mb-5"
+                style={{ filter: 'drop-shadow(0 0 8px rgba(192,57,43,0.3))' }} />
+            </Link>
+            <p className="text-sm leading-relaxed mb-6">
+              Spécialiste en équipements de sécurité industrielle pour les entreprises et industries de Côte d'Ivoire.
             </p>
+
+            {/* Badge ONPC */}
+            <div className="flex items-center gap-2 p-2.5 rounded-lg mb-5" style={{ background: 'rgba(192,57,43,0.08)', border: '1px solid rgba(192,57,43,0.2)' }}>
+              <img src="/logo-onpc.png" alt="ONPC" className="h-7 w-7 object-contain shrink-0" />
+              <div>
+                <p className="text-white text-xs font-bold leading-tight">Agréé ONPC</p>
+                <p className="text-gray-500 text-xs">Protection Civile CI</p>
+              </div>
+            </div>
+
             {/* Réseaux sociaux */}
-            <div className="flex items-center gap-3 mt-5">
+            <div className="flex items-center gap-2">
               {reseauxSociaux.map(({ nom, url, icon: Icon }) => (
-                <a
-                  key={nom}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={nom}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:text-white"
+                <a key={nom} href={url} target="_blank" rel="noopener noreferrer" aria-label={nom}
+                  className="social-btn w-9 h-9 rounded-xl flex items-center justify-center"
                   style={{ background: '#2c2c2e' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#C0392B'}
-                  onMouseLeave={e => e.currentTarget.style.background = '#2c2c2e'}
-                >
+                  onMouseLeave={e => e.currentTarget.style.background = '#2c2c2e'}>
                   <Icon size={15} />
                 </a>
               ))}
@@ -55,16 +90,19 @@ export default function Footer() {
 
           {/* Produits */}
           <div>
-            <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-widest" style={{ color: '#C0392B' }}>Produits</h4>
-            <ul className="space-y-2.5 text-sm">
-              {[
-                { label: ' Sécurité incendie', to: '/boutique?cat=securite-incendie' },
-                { label: ' Détection de gaz', to: '/boutique?cat=detection-de-gaz' },
-                { label: ' EPI', to: '/boutique?cat=epi' },
-                { label: ' Signalisation', to: '/boutique?cat=signalisation' },
-              ].map(item => (
-                <li key={item.to}>
-                  <Link to={item.to} className="hover:text-white transition-colors">{item.label}</Link>
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-0.5 h-4 rounded-full" style={{ background: '#C0392B' }} />
+              <h4 className="font-bold text-xs uppercase tracking-widest text-white">Produits</h4>
+            </div>
+            <ul className="space-y-3">
+              {produits.map(({ label, to, icon: Icon }) => (
+                <li key={to}>
+                  <Link to={to} className="footer-link flex items-center gap-2.5 text-sm transition-colors" style={{ color: '#888' }}>
+                    <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: 'rgba(192,57,43,0.12)' }}>
+                      <Icon size={12} style={{ color: '#C0392B' }} />
+                    </div>
+                    {label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -72,17 +110,16 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <h4 className="font-bold mb-4 text-sm uppercase tracking-widest" style={{ color: '#C0392B' }}>Navigation</h4>
-            <ul className="space-y-2.5 text-sm">
-              {[
-                { label: 'Accueil', to: '/' },
-                { label: 'Réalisations', to: '/realisations' },
-                { label: 'Boutique', to: '/boutique' },
-                { label: 'À propos', to: '/contact' },
-                { label: 'Demander un devis', to: '/contact' },
-              ].map(item => (
-                <li key={item.label}>
-                  <Link to={item.to} className="hover:text-white transition-colors">{item.label}</Link>
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-0.5 h-4 rounded-full" style={{ background: '#C0392B' }} />
+              <h4 className="font-bold text-xs uppercase tracking-widest text-white">Navigation</h4>
+            </div>
+            <ul className="space-y-3">
+              {navigation.map(({ label, to }) => (
+                <li key={label}>
+                  <Link to={to} className="footer-link text-sm" style={{ color: '#888' }}>
+                    {label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -90,41 +127,57 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-bold mb-4 text-sm uppercase tracking-widest" style={{ color: '#C0392B' }}>Contact</h4>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2.5">
-                <MapPin size={14} className="shrink-0 mt-0.5" style={{ color: '#C0392B' }} />
-                <span>Abidjan, Côte d'Ivoire</span>
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-0.5 h-4 rounded-full" style={{ background: '#C0392B' }} />
+              <h4 className="font-bold text-xs uppercase tracking-widest text-white">Contact</h4>
+            </div>
+            <ul className="space-y-3.5 text-sm mb-6">
+              <li className="flex items-start gap-3">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: 'rgba(192,57,43,0.12)' }}>
+                  <MapPin size={13} style={{ color: '#C0392B' }} />
+                </div>
+                <span className="leading-snug text-gray-400">Abidjan, Côte d'Ivoire</span>
               </li>
-              <li className="flex items-center gap-2.5">
-                <Phone size={14} className="shrink-0" style={{ color: '#C0392B' }} />
-                <a href="tel:+2250000000000" className="hover:text-white transition-colors">+225 00 00 00 00 00</a>
+              <li className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(192,57,43,0.12)' }}>
+                  <Phone size={13} style={{ color: '#C0392B' }} />
+                </div>
+                <a href="tel:+2250709501262" className="footer-link text-gray-400" style={{ color: '#888' }}>
+                  +225 07 09 50 12 62
+                </a>
               </li>
-              <li className="flex items-center gap-2.5">
-                <Mail size={14} className="shrink-0" style={{ color: '#C0392B' }} />
-                <a href="mailto:contact@tecsecur.ci" className="hover:text-white transition-colors">contact@tecsecur.ci</a>
+              <li className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(192,57,43,0.12)' }}>
+                  <Mail size={13} style={{ color: '#C0392B' }} />
+                </div>
+                <a href="mailto:tecsecur88@gmail.com" className="footer-link text-gray-400" style={{ color: '#888' }}>
+                  tecsecur88@gmail.com
+                </a>
               </li>
             </ul>
 
-            {/* CTA devis */}
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 mt-5 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors"
-              style={{ background: '#C0392B' }}
-              onMouseEnter={e => e.currentTarget.style.background = '#922B21'}
-              onMouseLeave={e => e.currentTarget.style.background = '#C0392B'}
-            >
-              Je veux un devis →
+            <Link to="/contact"
+              className="inline-flex items-center gap-2 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all hover:gap-3 hover:shadow-lg hover:shadow-red-900/30"
+              style={{ background: 'linear-gradient(135deg, #C0392B, #922B21)' }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+              Demander un devis <ArrowRight size={13} />
             </Link>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs" style={{ borderColor: '#2c2c2e', color: '#555' }}>
-          <span>© {new Date().getFullYear()} TecSecur CI. Tous droits réservés.</span>
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
-            <span>Site sécurisé SSL</span>
+        <div className="border-t pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs" style={{ borderColor: '#2c2c2e' }}>
+          <span style={{ color: '#444' }}>© {new Date().getFullYear()} TecSecur CI — Tous droits réservés.</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" style={{ animation: 'footerPulse 2s ease-in-out infinite' }} />
+              <span style={{ color: '#444' }}>Site sécurisé SSL</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Shield size={11} style={{ color: '#C0392B' }} />
+              <span style={{ color: '#444' }}>Agréé ONPC</span>
+            </div>
           </div>
         </div>
       </div>

@@ -1,23 +1,34 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Menu, X, FileText, ChevronDown, Package, Wrench, ArrowRight } from 'lucide-react'
+import {
+  Menu, X, FileText, ChevronDown, Package, Wrench, ArrowRight,
+  Flame, Wind, HardHat, TrafficCone, GraduationCap, Settings, ClipboardCheck,
+  Image, ShoppingBag, Info,
+} from 'lucide-react'
 
 const menuProduits = [
-  { titre: ' Incendie', items: ['Extincteur', 'RIA', 'PIA', 'Lance incendie', 'Poteaux incendie'], slug: 'securite-incendie' },
-  { titre: ' Détection gaz', items: ['Détecteur portable', 'Détecteur fixe', 'Balise de détection', 'Éthylotest'], slug: 'detection-de-gaz' },
-  { titre: ' EPI', items: ['Chaussures de sécurité', 'Casque', 'Protection auditive', 'Vêtements de travail'], slug: 'epi' },
-  { titre: ' Signalisation', items: ['Cônes', 'Ruban de signalisation', 'Panneaux', 'Traçeur de chantier'], slug: 'signalisation' },
+  { titre: 'Incendie', icon: Flame, items: ['Extincteur', 'RIA', 'PIA', 'Lance incendie', 'Poteaux incendie'], slug: 'securite-incendie' },
+  { titre: 'Détection gaz', icon: Wind, items: ['Détecteur portable', 'Détecteur fixe', 'Balise de détection', 'Éthylotest'], slug: 'detection-de-gaz' },
+  { titre: 'EPI', icon: HardHat, items: ['Chaussures de sécurité', 'Casque', 'Protection auditive', 'Vêtements de travail'], slug: 'epi' },
+  { titre: 'Signalisation', icon: TrafficCone, items: ['Cônes', 'Ruban de signalisation', 'Panneaux', 'Traçeur de chantier'], slug: 'signalisation' },
 ]
 
 const menuServices = [
-  { titre: ' Formation', items: ['Sécurité incendie', 'Premiers secours', 'Utilisation EPI'] },
-  { titre: ' Maintenance', items: ['Extincteurs', 'Détecteurs de gaz', 'Vérification EPI'] },
-  { titre: ' Conseil & Audit', items: ['Audit sécurité site', 'Plan de prévention', 'Étude des risques'] },
+  { titre: 'Formation', icon: GraduationCap, items: ['Sécurité incendie', 'Premiers secours', 'Utilisation EPI'] },
+  { titre: 'Maintenance', icon: Settings, items: ['Extincteurs', 'Détecteurs de gaz', 'Vérification EPI'] },
+  { titre: 'Conseil & Audit', icon: ClipboardCheck, items: ['Audit sécurité site', 'Plan de prévention', 'Étude des risques'] },
+]
+
+const mainLinks = [
+  { to: '/realisations', label: 'Réalisations', icon: Image },
+  { to: '/boutique', label: 'Boutique', icon: ShoppingBag },
+  { to: '/contact', label: 'À propos', icon: Info },
 ]
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [dropdown, setDropdown] = useState(null)
+  const [openSeq, setOpenSeq] = useState(0)
   const [scrolled, setScrolled] = useState(false)
   const navRef = useRef(null)
   const location = useLocation()
@@ -45,14 +56,17 @@ export default function Navbar() {
   }, [])
 
   function toggleDropdown(name) {
-    setDropdown(prev => prev === name ? null : name)
+    setDropdown(prev => {
+      const next = prev === name ? null : name
+      if (next) setOpenSeq(s => s + 1)
+      return next
+    })
   }
 
   return (
     <>
       <style>{`
         @keyframes navFadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDown { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 600px; } }
         .nav-link-underline { position: relative; }
         .nav-link-underline::after {
           content: ''; position: absolute; bottom: -2px; left: 50%; right: 50%;
@@ -67,6 +81,9 @@ export default function Navbar() {
           transition: background 0.15s, transform 0.15s;
         }
         .dropdown-item:hover::before { background: #C0392B; transform: translateY(-50%) scale(1.5); }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
       `}</style>
 
       <header
@@ -77,6 +94,7 @@ export default function Navbar() {
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
           boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.4)' : '0 1px 0 rgba(255,255,255,0.05)',
           transition: 'all 0.3s ease',
+          animation: 'navFadeIn 0.45s ease',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -100,7 +118,7 @@ export default function Navbar() {
                   className="nav-link-underline flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
                   style={{ color: dropdown === 'produits' ? '#fff' : '#aaa', background: dropdown === 'produits' ? 'rgba(255,255,255,0.06)' : 'transparent' }}
                 >
-                  <Package size={15} />
+                  <Package size={15} style={{ transform: dropdown === 'produits' ? 'scale(1.15)' : 'scale(1)', transition: 'transform 0.2s ease' }} />
                   Produits
                   <ChevronDown size={14} style={{ transform: dropdown === 'produits' ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.25s ease' }} />
                 </button>
@@ -118,10 +136,12 @@ export default function Navbar() {
                 }}>
                   {/* Trait rouge top */}
                   <div style={{ height: '2px', background: 'linear-gradient(90deg, #C0392B, transparent)', borderRadius: '2px', marginBottom: '16px' }} />
-                  <div className="grid grid-cols-4 gap-4">
-                    {menuProduits.map((col) => (
-                      <div key={col.titre}>
-                        <p className="text-xs font-bold uppercase tracking-wider mb-2.5" style={{ color: '#C0392B' }}>{col.titre}</p>
+                  <div key={`pg-${openSeq}`} className="grid grid-cols-4 gap-4">
+                    {menuProduits.map((col, i) => (
+                      <div key={col.titre} style={{ animation: 'navFadeIn 0.35s ease both', animationDelay: `${i * 50}ms` }}>
+                        <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider mb-2.5" style={{ color: '#C0392B' }}>
+                          <col.icon size={13} /> {col.titre}
+                        </p>
                         <ul className="space-y-1.5">
                           {col.items.map((item) => (
                             <li key={item}>
@@ -156,7 +176,7 @@ export default function Navbar() {
                   className="nav-link-underline flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
                   style={{ color: dropdown === 'services' ? '#fff' : '#aaa', background: dropdown === 'services' ? 'rgba(255,255,255,0.06)' : 'transparent' }}
                 >
-                  <Wrench size={15} />
+                  <Wrench size={15} style={{ transform: dropdown === 'services' ? 'scale(1.15)' : 'scale(1)', transition: 'transform 0.2s ease' }} />
                   Services
                   <ChevronDown size={14} style={{ transform: dropdown === 'services' ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.25s ease' }} />
                 </button>
@@ -173,10 +193,12 @@ export default function Navbar() {
                   transformOrigin: 'top left',
                 }}>
                   <div style={{ height: '2px', background: 'linear-gradient(90deg, #C0392B, transparent)', borderRadius: '2px', marginBottom: '16px' }} />
-                  <div className="grid grid-cols-3 gap-4">
-                    {menuServices.map((col) => (
-                      <div key={col.titre}>
-                        <p className="text-xs font-bold uppercase tracking-wider mb-2.5" style={{ color: '#C0392B' }}>{col.titre}</p>
+                  <div key={`sg-${openSeq}`} className="grid grid-cols-3 gap-4">
+                    {menuServices.map((col, i) => (
+                      <div key={col.titre} style={{ animation: 'navFadeIn 0.35s ease both', animationDelay: `${i * 50}ms` }}>
+                        <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider mb-2.5" style={{ color: '#C0392B' }}>
+                          <col.icon size={13} /> {col.titre}
+                        </p>
                         <ul className="space-y-1.5">
                           {col.items.map((item) => (
                             <li key={item}>
@@ -203,11 +225,7 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {[
-                { to: '/realisations', label: 'Réalisations' },
-                { to: '/boutique', label: 'Boutique' },
-                { to: '/contact', label: 'À propos' },
-              ].map(({ to, label }) => (
+              {mainLinks.map(({ to, label }) => (
                 <NavLink key={to} to={to} onClick={() => setDropdown(null)}
                   className={({ isActive }) =>
                     `nav-link-underline${isActive ? ' active' : ''} px-3 py-2 rounded-lg text-sm font-medium transition-all`
@@ -263,49 +281,54 @@ export default function Navbar() {
           background: '#2c2c2e',
           borderTop: menuOpen ? '1px solid #3a3a3c' : 'none',
         }}>
-          <div className="md:hidden px-4 py-4 overflow-y-auto" style={{ maxHeight: '80vh' }}>
-            <p className="text-xs font-bold uppercase tracking-widest py-2" style={{ color: '#C0392B' }}>Produits</p>
-            {menuProduits.map(col => (
-              <div key={col.titre} className="mb-3">
-                <p className="text-xs font-semibold mb-1.5 px-1" style={{ color: '#555' }}>{col.titre}</p>
-                {col.items.map(item => (
-                  <Link key={item} to={`/boutique?cat=${col.slug}`}
-                    className="block text-sm py-1.5 pl-3 rounded-lg transition-colors hover:bg-white/5"
-                    style={{ color: '#aaa' }} onClick={() => setMenuOpen(false)}>
-                    {item}
-                  </Link>
-                ))}
-              </div>
-            ))}
+          <div key={menuOpen} className="md:hidden px-4 py-4 overflow-y-auto" style={{ maxHeight: '80vh' }}>
 
-            <p className="text-xs font-bold uppercase tracking-widest py-2 mt-3" style={{ color: '#C0392B' }}>Services</p>
-            {menuServices.map(col => (
-              <div key={col.titre} className="mb-3">
-                <p className="text-xs font-semibold mb-1.5 px-1" style={{ color: '#555' }}>{col.titre}</p>
-                {col.items.map(item => (
-                  <Link key={item} to="/contact"
-                    className="block text-sm py-1.5 pl-3 rounded-lg transition-colors hover:bg-white/5"
-                    style={{ color: '#aaa' }} onClick={() => setMenuOpen(false)}>
-                    {item}
-                  </Link>
-                ))}
-              </div>
-            ))}
+            <div style={{ animation: 'navFadeIn 0.35s ease both' }}>
+              <p className="text-xs font-bold uppercase tracking-widest py-2" style={{ color: '#C0392B' }}>Produits</p>
+              {menuProduits.map(col => (
+                <div key={col.titre} className="mb-3">
+                  <p className="flex items-center gap-1.5 text-xs font-semibold mb-1.5 px-1" style={{ color: '#555' }}>
+                    <col.icon size={13} /> {col.titre}
+                  </p>
+                  {col.items.map(item => (
+                    <Link key={item} to={`/boutique?cat=${col.slug}`}
+                      className="block text-sm py-1.5 pl-3 rounded-lg transition-colors hover:bg-white/5"
+                      style={{ color: '#aaa' }} onClick={() => setMenuOpen(false)}>
+                      {item}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </div>
 
-            <div className="pt-4 mt-3 border-t space-y-1" style={{ borderColor: '#3a3a3c' }}>
-              {[
-                { to: '/realisations', label: 'Réalisations' },
-                { to: '/boutique', label: 'Boutique' },
-                { to: '/contact', label: 'À propos' },
-              ].map(({ to, label }) => (
+            <div style={{ animation: 'navFadeIn 0.35s ease both', animationDelay: '70ms' }}>
+              <p className="text-xs font-bold uppercase tracking-widest py-2 mt-3" style={{ color: '#C0392B' }}>Services</p>
+              {menuServices.map(col => (
+                <div key={col.titre} className="mb-3">
+                  <p className="flex items-center gap-1.5 text-xs font-semibold mb-1.5 px-1" style={{ color: '#555' }}>
+                    <col.icon size={13} /> {col.titre}
+                  </p>
+                  {col.items.map(item => (
+                    <Link key={item} to="/contact"
+                      className="block text-sm py-1.5 pl-3 rounded-lg transition-colors hover:bg-white/5"
+                      style={{ color: '#aaa' }} onClick={() => setMenuOpen(false)}>
+                      {item}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-4 mt-3 border-t space-y-1" style={{ borderColor: '#3a3a3c', animation: 'navFadeIn 0.35s ease both', animationDelay: '140ms' }}>
+              {mainLinks.map(({ to, label, icon: Icon }) => (
                 <Link key={to} to={to}
-                  className="flex items-center py-2.5 px-3 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
+                  className="flex items-center gap-2.5 py-2.5 px-3 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
                   style={{ color: '#bbb' }} onClick={() => setMenuOpen(false)}>
-                  {label}
+                  <Icon size={15} className="text-gray-500" /> {label}
                 </Link>
               ))}
               <Link to="/contact"
-                className="flex items-center justify-center gap-2 text-white font-bold px-4 py-3 rounded-xl text-sm w-full mt-3"
+                className="flex items-center justify-center gap-2 text-white font-bold px-4 py-3 rounded-xl text-sm w-full mt-3 transition-transform active:scale-95"
                 style={{ background: 'linear-gradient(135deg, #C0392B, #922B21)' }}
                 onClick={() => setMenuOpen(false)}>
                 <FileText size={15} /> Je veux un devis

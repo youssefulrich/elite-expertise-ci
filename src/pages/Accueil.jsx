@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom'
-import { Shield, ArrowRight, Phone, CheckCircle, Truck, Headphones, Star, Quote, ChevronDown } from 'lucide-react'
+import {
+  Shield, ArrowRight, Phone, CheckCircle, CheckCircle2, Truck, Headphones, Star, Quote, ChevronDown,
+  Flame, Wind, HardHat, TrafficCone, Package,
+} from 'lucide-react'
 import { useEffect, useState, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 
 const categories = [
-  { nom: 'Sécurité incendie', slug: 'securite-incendie', emoji: '', desc: 'Extincteurs · RIA · Lances', img: '/img-incendie.webp' },
-  { nom: 'Détection de gaz', slug: 'detection-de-gaz', emoji: '', desc: 'Fixes · Portables · Balises', img: '/img-epi2.jpg' },
-  { nom: 'EPI', slug: 'epi', emoji: '', desc: 'Casques · Chaussures · Gilets', img: '/img-epi.jpg' },
-  { nom: 'Signalisation', slug: 'signalisation', emoji: '', desc: 'Cônes · Rubans · Panneaux', img: '/img-signalisation.jpg' },
+  { nom: 'Sécurité incendie', slug: 'securite-incendie', icon: Flame, desc: 'Extincteurs · RIA · Lances', img: '/img-incendie.webp' },
+  { nom: 'Détection de gaz', slug: 'detection-de-gaz', icon: Wind, desc: 'Fixes · Portables · Balises', img: '/img-epi2.jpg' },
+  { nom: 'EPI', slug: 'epi', icon: HardHat, desc: 'Casques · Chaussures · Gilets', img: '/img-epi.jpg' },
+  { nom: 'Signalisation', slug: 'signalisation', icon: TrafficCone, desc: 'Cônes · Rubans · Panneaux', img: '/img-signalisation.jpg' },
 ]
 
 const marques = ['Dräger', 'MSA', 'Portwest', 'Sentech', 'Zoll', 'AIRBEL']
@@ -128,7 +131,7 @@ export default function Accueil() {
     <div style={{ overflowX: 'hidden' }}>
 
       {/* ===== HERO ===== */}
-      <section className="relative text-white flex items-center min-h-[620px]" style={{ backgroundImage: 'url("/img-epi.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="relative text-white flex items-center min-h-[620px]" style={{ backgroundImage: 'url("/formation-1.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(0,0,0,0.92) 45%, rgba(0,0,0,0.2) 100%)' }} />
 
         {/* Particules rouges décoratives */}
@@ -202,11 +205,11 @@ export default function Accueil() {
 
         {/* Cards catégories flottantes */}
         <div className="hidden lg:grid absolute right-12 top-1/2 -translate-y-1/2 grid-cols-2 gap-3 z-10">
-          {categories.map(({ nom, emoji, desc, slug }, i) => (
+          {categories.map(({ nom, icon: Icon, desc, slug }, i) => (
             <Link key={nom} to={`/boutique?cat=${slug}`}
               className="flex flex-col items-center text-center p-4 rounded-xl border border-white border-opacity-10 hover:border-red-500 hover:scale-105 transition-all"
               style={{ background: 'rgba(0,0,0,0.6)', minWidth: '130px', backdropFilter: 'blur(8px)', animation: `fadeUp 0.6s ease ${0.4 + i * 0.15}s both` }}>
-              <span className="text-3xl mb-2">{emoji}</span>
+              <Icon size={26} className="mb-2" style={{ color: '#e87060' }} />
               <p className="text-white text-xs font-bold mb-1">{nom}</p>
               <p className="text-gray-400 text-xs">{desc}</p>
             </Link>
@@ -302,7 +305,7 @@ export default function Accueil() {
                     <Link to={`/boutique/${p.slug}`}
                       className="bg-white rounded-xl border border-gray-100 hover:border-red-200 hover:shadow-xl transition-all group overflow-hidden hover:-translate-y-1 block">
                       <div className="relative bg-gray-50 h-44 flex items-center justify-center p-4 overflow-hidden">
-                        {p.image_url ? <img src={p.image_url} alt={p.nom} className="h-full object-contain group-hover:scale-110 transition-transform duration-500" /> : <span className="text-5xl">📦</span>}
+                        {p.image_url ? <img src={p.image_url} alt={p.nom} className="h-full object-contain group-hover:scale-110 transition-transform duration-500" /> : <Package size={48} className="text-gray-300" />}
                         {p.marques && <span className="absolute top-2 left-2 text-white text-xs font-bold px-2 py-0.5 rounded" style={{ background: '#C0392B' }}>{p.marques.nom}</span>}
                         {p.statut === 'en_stock' && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded">En stock</span>}
                       </div>
@@ -446,7 +449,7 @@ export default function Accueil() {
                 <div>
                   <p className="font-extrabold text-gray-900 text-sm">Agréé O.N.P.C</p>
                   <p className="text-gray-500 text-xs mt-0.5">Office National de la Protection Civile</p>
-                  <p className="text-xs font-bold mt-1" style={{ color: '#C0392B' }}>Côte d'Ivoire ✓</p>
+                  <p className="text-xs font-bold mt-1 flex items-center gap-1" style={{ color: '#C0392B' }}>Côte d'Ivoire <CheckCircle2 size={12} /></p>
                 </div>
               </div>
             </div>

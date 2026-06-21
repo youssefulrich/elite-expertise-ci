@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { Search, SlidersHorizontal, X, ArrowRight, Tag } from 'lucide-react'
+import { Search, SlidersHorizontal, X, ArrowRight, Tag, SearchX, CheckCircle2, XCircle, MessageCircle } from 'lucide-react'
 
 const bgCategories = {
   'securite-incendie': '/img-incendie.webp',
@@ -71,15 +71,54 @@ export default function Boutique() {
   }
 
   const hasFiltres = categorieFiltree || marqueFiltree || recherche
+  const gridKey = `${categorieFiltree || 'all'}-${marqueFiltree || 'all'}-${recherche}`
 
   return (
     <div>
 
+      {/* Animations locales à la page — n'affecte rien d'autre dans l'app */}
+      <style>{`
+        @keyframes boutiqueFadeInUp {
+          from { opacity: 0; transform: translateY(14px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes boutiqueFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes boutiqueScaleIn {
+          from { opacity: 0; transform: scale(0.92); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes boutiqueHeroZoom {
+          from { transform: scale(1.07); }
+          to   { transform: scale(1); }
+        }
+        @keyframes boutiqueShimmer {
+          0%   { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .anim-fade-in-up { animation: boutiqueFadeInUp 0.55s ease both; }
+        .anim-fade-in { animation: boutiqueFadeIn 0.4s ease both; }
+        .anim-scale-in { animation: boutiqueScaleIn 0.35s ease both; }
+        .anim-hero-zoom { animation: boutiqueHeroZoom 6s ease-out both; }
+        .anim-shimmer {
+          background: linear-gradient(90deg, #eee 25%, #f6f6f6 50%, #eee 75%);
+          background-size: 200% 100%;
+          animation: boutiqueShimmer 1.4s infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .anim-fade-in-up, .anim-fade-in, .anim-scale-in, .anim-hero-zoom, .anim-shimmer {
+            animation: none !important;
+          }
+        }
+      `}</style>
+
       {/* ===== HERO BOUTIQUE ===== */}
       <section className="relative h-48 md:h-64 flex items-end overflow-hidden">
-        <img src={heroBg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img key={heroBg} src={heroBg} alt="" className="absolute inset-0 w-full h-full object-cover anim-hero-zoom" />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.2) 100%)' }} />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 pb-8 w-full">
+        <div key={`hero-${categorieFiltree || 'all'}`} className="relative z-10 max-w-7xl mx-auto px-6 pb-8 w-full anim-fade-in-up">
           <div className="flex items-end justify-between">
             <div>
               <p className="text-red-400 text-xs font-bold uppercase tracking-widest mb-1">
@@ -93,7 +132,7 @@ export default function Boutique() {
               </p>
             </div>
             {!loading && (
-              <span className="hidden md:block text-white text-sm font-semibold px-4 py-2 rounded-full" style={{ background: 'rgba(192,57,43,0.7)' }}>
+              <span className="hidden md:block text-white text-sm font-semibold px-4 py-2 rounded-full anim-scale-in" style={{ background: 'rgba(192,57,43,0.7)' }}>
                 {produits.length} produit{produits.length > 1 ? 's' : ''}
               </span>
             )}
@@ -106,7 +145,7 @@ export default function Boutique() {
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none">
           <button
             onClick={resetFiltres}
-            className="shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all"
+            className="shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 hover:scale-105 active:scale-95"
             style={{
               background: !categorieFiltree ? '#C0392B' : '#f5f5f5',
               color: !categorieFiltree ? '#fff' : '#555',
@@ -118,7 +157,7 @@ export default function Boutique() {
             <button
               key={cat.id}
               onClick={() => updateFiltre('cat', cat.slug)}
-              className="shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap"
+              className="shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 whitespace-nowrap hover:scale-105 active:scale-95"
               style={{
                 background: categorieFiltree === cat.slug ? '#C0392B' : '#f5f5f5',
                 color: categorieFiltree === cat.slug ? '#fff' : '#555',
@@ -135,23 +174,23 @@ export default function Boutique() {
         {/* Barre recherche + filtre mobile */}
         <div className="flex gap-3 mb-6">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors" size={18} />
             <input
               type="text"
               placeholder="Rechercher un produit..."
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm transition-shadow"
               style={{ '--tw-ring-color': '#C0392B' }}
               value={recherche}
               onChange={e => updateFiltre('q', e.target.value)}
             />
             {recherche && (
-              <button onClick={() => updateFiltre('q', '')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <button onClick={() => updateFiltre('q', '')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-transform hover:rotate-90 anim-scale-in">
                 <X size={15} />
               </button>
             )}
           </div>
           <button
-            className="md:hidden flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium"
+            className="md:hidden flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium transition-transform active:scale-95"
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
             <SlidersHorizontal size={16} /> Filtres
@@ -163,21 +202,21 @@ export default function Boutique() {
           <div className="flex flex-wrap items-center gap-2 mb-5">
             <span className="text-xs text-gray-500 font-medium">Filtres actifs :</span>
             {categorieFiltree && (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full text-white" style={{ background: '#C0392B' }}>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full text-white anim-scale-in" style={{ background: '#C0392B' }}>
                 {categorieActive?.nom || categorieFiltree}
-                <button onClick={() => updateFiltre('cat', null)}><X size={11} /></button>
+                <button onClick={() => updateFiltre('cat', null)} className="transition-transform hover:rotate-90"><X size={11} /></button>
               </span>
             )}
             {marqueFiltree && (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full text-white" style={{ background: '#1C1C1E' }}>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full text-white anim-scale-in" style={{ background: '#1C1C1E' }}>
                 {marqueFiltree}
-                <button onClick={() => updateFiltre('marque', null)}><X size={11} /></button>
+                <button onClick={() => updateFiltre('marque', null)} className="transition-transform hover:rotate-90"><X size={11} /></button>
               </span>
             )}
             {recherche && (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-200 text-gray-700">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-200 text-gray-700 anim-scale-in">
                 "{recherche}"
-                <button onClick={() => updateFiltre('q', '')}><X size={11} /></button>
+                <button onClick={() => updateFiltre('q', '')} className="transition-transform hover:rotate-90"><X size={11} /></button>
               </span>
             )}
             <button onClick={resetFiltres} className="text-xs text-red-500 hover:underline font-medium ml-1">
@@ -197,7 +236,7 @@ export default function Boutique() {
               <ul className="space-y-1">
                 <li>
                   <button
-                    className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-colors ${!categorieFiltree ? 'font-bold text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
+                    className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-all duration-200 ${!categorieFiltree ? 'font-bold text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800 hover:translate-x-1'}`}
                     style={!categorieFiltree ? { background: '#C0392B' } : {}}
                     onClick={() => updateFiltre('cat', null)}
                   >
@@ -207,7 +246,7 @@ export default function Boutique() {
                 {categories.filter(c => !c.parent_id).map(cat => (
                   <li key={cat.id}>
                     <button
-                      className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-colors ${categorieFiltree === cat.slug ? 'font-bold text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
+                      className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-all duration-200 ${categorieFiltree === cat.slug ? 'font-bold text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800 hover:translate-x-1'}`}
                       style={categorieFiltree === cat.slug ? { background: '#C0392B' } : {}}
                       onClick={() => updateFiltre('cat', cat.slug)}
                     >
@@ -224,7 +263,7 @@ export default function Boutique() {
               <ul className="space-y-1">
                 <li>
                   <button
-                    className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-colors ${!marqueFiltree ? 'font-bold text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
+                    className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-all duration-200 ${!marqueFiltree ? 'font-bold text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800 hover:translate-x-1'}`}
                     style={!marqueFiltree ? { background: '#C0392B' } : {}}
                     onClick={() => updateFiltre('marque', null)}
                   >
@@ -234,7 +273,7 @@ export default function Boutique() {
                 {marques.map(m => (
                   <li key={m.id}>
                     <button
-                      className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-colors ${marqueFiltree === m.nom ? 'font-bold text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
+                      className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-all duration-200 ${marqueFiltree === m.nom ? 'font-bold text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800 hover:translate-x-1'}`}
                       style={marqueFiltree === m.nom ? { background: '#C0392B' } : {}}
                       onClick={() => updateFiltre('marque', m.nom)}
                     >
@@ -246,10 +285,11 @@ export default function Boutique() {
             </div>
 
             {/* CTA sidebar */}
-            <div className="mt-8 rounded-xl p-4 text-white text-center" style={{ background: '#1C1C1E' }}>
+            <div className="mt-8 rounded-xl p-4 text-white text-center transition-transform duration-300 hover:-translate-y-1" style={{ background: '#1C1C1E' }}>
+              <MessageCircle size={20} className="mx-auto mb-2 text-red-400" />
               <p className="text-xs font-bold mb-1">Besoin d'un conseil ?</p>
               <p className="text-gray-400 text-xs mb-3">Notre équipe vous aide à choisir</p>
-              <Link to="/contact" className="inline-block text-xs font-bold px-4 py-2 rounded-lg text-white transition-colors" style={{ background: '#C0392B' }}>
+              <Link to="/contact" className="inline-block text-xs font-bold px-4 py-2 rounded-lg text-white transition-transform hover:scale-105" style={{ background: '#C0392B' }}>
                 Nous contacter
               </Link>
             </div>
@@ -260,32 +300,33 @@ export default function Boutique() {
             {loading ? (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-gray-100 rounded-2xl h-72 animate-pulse" />
+                  <div key={i} className="anim-shimmer rounded-2xl h-72" />
                 ))}
               </div>
             ) : produits.length === 0 ? (
-              <div className="text-center py-24">
-                <div className="text-6xl mb-4">🔍</div>
+              <div className="text-center py-24 anim-fade-in-up">
+                <SearchX size={52} strokeWidth={1.5} className="mx-auto mb-4 anim-scale-in" style={{ color: '#C0392B' }} />
                 <p className="text-lg font-bold text-gray-700 mb-1">Aucun produit trouvé</p>
                 <p className="text-sm text-gray-400 mb-6">Essayez de modifier vos filtres ou votre recherche</p>
-                <button onClick={resetFiltres} className="text-white font-bold px-6 py-3 rounded-lg text-sm" style={{ background: '#C0392B' }}>
+                <button onClick={resetFiltres} className="text-white font-bold px-6 py-3 rounded-lg text-sm transition-transform hover:scale-105" style={{ background: '#C0392B' }}>
                   Voir tous les produits
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {produits.map(p => (
+              <div key={gridKey} className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {produits.map((p, i) => (
                   <Link
                     key={p.id}
                     to={`/boutique/${p.slug}`}
-                    className="bg-white rounded-2xl border border-gray-100 hover:border-red-200 hover:shadow-lg transition-all group overflow-hidden flex flex-col"
+                    className="bg-white rounded-2xl border border-gray-100 hover:border-red-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden flex flex-col anim-fade-in-up"
+                    style={{ animationDelay: `${Math.min(i, 9) * 45}ms` }}
                   >
                     {/* Image */}
                     <div className="relative bg-gray-50 h-44 flex items-center justify-center p-4 overflow-hidden">
                       <img
                         src={p.image_url || 'https://via.placeholder.com/300x200?text=Produit'}
                         alt={p.nom}
-                        className="h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        className="h-full object-contain group-hover:scale-110 transition-transform duration-500"
                         onError={e => { e.target.src = 'https://via.placeholder.com/300x200?text=Produit' }}
                       />
                       {p.marques && (
@@ -294,13 +335,13 @@ export default function Boutique() {
                         </span>
                       )}
                       {p.statut === 'en_stock' && (
-                        <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
-                          En stock
+                        <span className="absolute top-2 right-2 inline-flex items-center gap-1 bg-green-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                          <CheckCircle2 size={11} /> En stock
                         </span>
                       )}
                       {p.statut === 'rupture' && (
-                        <span className="absolute top-2 right-2 bg-gray-400 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
-                          Rupture
+                        <span className="absolute top-2 right-2 inline-flex items-center gap-1 bg-gray-400 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                          <XCircle size={11} /> Rupture
                         </span>
                       )}
                     </div>
@@ -308,8 +349,8 @@ export default function Boutique() {
                     {/* Infos */}
                     <div className="p-4 flex flex-col flex-1">
                       {p.categories && (
-                        <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: '#C0392B' }}>
-                          {p.categories.nom}
+                        <p className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide mb-1" style={{ color: '#C0392B' }}>
+                          <Tag size={11} /> {p.categories.nom}
                         </p>
                       )}
                       <h3 className="font-bold text-gray-800 text-sm group-hover:text-red-600 transition-colors line-clamp-2 flex-1 mb-3">
@@ -320,7 +361,7 @@ export default function Boutique() {
                           ? <p className="font-extrabold text-sm" style={{ color: '#C0392B' }}>{Number(p.prix).toLocaleString('fr-FR')} <span className="text-xs font-normal text-gray-400">FCFA</span></p>
                           : <p className="text-xs text-gray-400 italic">Prix sur devis</p>
                         }
-                        <span className="w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white" style={{ background: '#C0392B' }}>
+                        <span className="w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-0 -rotate-45 text-white" style={{ background: '#C0392B' }}>
                           <ArrowRight size={13} />
                         </span>
                       </div>
@@ -340,7 +381,7 @@ export default function Boutique() {
             <h3 className="font-display text-xl font-extrabold text-white mb-1">Vous ne trouvez pas ce que vous cherchez ?</h3>
             <p className="text-gray-400 text-sm">Contactez-nous, nous pouvons sourcer n'importe quel équipement de sécurité.</p>
           </div>
-          <Link to="/contact" className="shrink-0 flex items-center gap-2 font-bold px-6 py-3 rounded-lg text-white transition-colors" style={{ background: '#C0392B' }}>
+          <Link to="/contact" className="shrink-0 flex items-center gap-2 font-bold px-6 py-3 rounded-lg text-white transition-transform hover:scale-105" style={{ background: '#C0392B' }}>
             Demander un devis <ArrowRight size={16} />
           </Link>
         </div>

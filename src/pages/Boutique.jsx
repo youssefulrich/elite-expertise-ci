@@ -356,11 +356,15 @@ export default function Boutique() {
                       <h3 className="font-bold text-gray-800 text-sm group-hover:text-red-600 transition-colors line-clamp-2 flex-1 mb-3">
                         {p.nom}
                       </h3>
+                      {p.description && (
+                        <p className="text-xs text-gray-400 leading-relaxed line-clamp-2 mb-3">
+                          {p.description}
+                        </p>
+                      )}
                       <div className="flex items-center justify-between mt-auto">
-                        {p.prix
-                          ? <p className="font-extrabold text-sm" style={{ color: '#C0392B' }}>{Number(p.prix).toLocaleString('fr-FR')} <span className="text-xs font-normal text-gray-400">FCFA</span></p>
-                          : <p className="text-xs text-gray-400 italic">Prix sur devis</p>
-                        }
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: '#C0392B' }}>
+                          Voir les caractéristiques
+                        </span>
                         <span className="w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-0 -rotate-45 text-white" style={{ background: '#C0392B' }}>
                           <ArrowRight size={13} />
                         </span>

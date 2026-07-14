@@ -134,14 +134,14 @@ export default function Contact() {
               </div>
               <div className="flex items-center gap-3 group">
                 <Phone size={18} className="text-accent-400 shrink-0 transition-transform group-hover:scale-110" />
-                <a href="tel:+2250000000000" className="text-primary-100 hover:text-white transition-colors relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-white after:transition-all hover:after:w-full">
-                  +225 00 00 00 00 00
+                <a href="tel:+225 01 70 13 14 15" className="text-primary-100 hover:text-white transition-colors relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-white after:transition-all hover:after:w-full">
+                  +225 01 70 13 14 15
                 </a>
               </div>
               <div className="flex items-center gap-3 group">
                 <Mail size={18} className="text-accent-400 shrink-0 transition-transform group-hover:scale-110" />
-                <a href="mailto:contact@eliteexpertiseci.com" className="text-primary-100 hover:text-white transition-colors relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-white after:transition-all hover:after:w-full">
-                  contact@eliteexpertiseci.com
+                <a href="mailto:yedadou@gmail.com" className="text-primary-100 hover:text-white transition-colors relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-white after:transition-all hover:after:w-full">
+                  yedadou@gmail.com
                 </a>
               </div>
             </div>
@@ -231,7 +231,7 @@ export default function Contact() {
                       value={form.email}
                       onChange={handleChange}
                       className="w-full pl-10 border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-shadow"
-                      placeholder="jean@entreprise.ci"
+                      placeholder="yedadou@gmail.com"
                     />
                   </div>
                 </div>
@@ -245,7 +245,7 @@ export default function Contact() {
                       value={form.telephone}
                       onChange={handleChange}
                       className="w-full pl-10 border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-shadow"
-                      placeholder="+225 00 00 00 00 00"
+                      placeholder="+225 01 70 13 14 15 "
                     />
                   </div>
                 </div>

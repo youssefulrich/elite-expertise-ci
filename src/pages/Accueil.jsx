@@ -16,10 +16,10 @@ const categories = [
 const marques = ['Dräger', 'MSA', 'Portwest', 'Sentech', 'Zoll', 'AIRBEL']
 
 const stats = [
-  { val: '10+',  label: 'Marques mondiales' },
-  { val: '100+', label: 'Produits en stock' },
-  { val: '500+', label: 'Clients satisfaits' },
-  { val: '5 ans',label: "D'expertise CI" },
+  { val: '10+',   label: 'Marques mondiales' },
+  { val: '100+',  label: 'Produits en stock' },
+  { val: '500+',  label: 'Clients satisfaits' },
+  { val: '5 ans', label: "D'expertise CI" },
 ]
 
 const pourquoiNous = [
@@ -29,7 +29,7 @@ const pourquoiNous = [
 ]
 
 const temoignages = [
-  { nom: 'Kouassi Fernand',  poste: 'Responsable HSE — SODECI',       texte: 'Elite Expertise CI nous a fourni des détecteurs de gaz MSA de haute qualité. Livraison rapide et équipe très professionnelle.', note: 5 },
+  { nom: 'Kouassi Fernand',  poste: 'Responsable HSE — SODECI',        texte: 'Elite Expertise CI nous a fourni des détecteurs de gaz MSA de haute qualité. Livraison rapide et équipe très professionnelle.', note: 5 },
   { nom: 'Aminata Diallo',   poste: 'Directrice Sécurité — Orange CI', texte: 'Partenaire fiable depuis 3 ans. Leurs équipements EPI sont conformes aux normes et leur service après-vente est irréprochable.', note: 5 },
   { nom: 'Jean-Marc Brou',   poste: 'Chef de chantier — Bouygues CI',  texte: 'Excellente réactivité pour nos commandes urgentes. Prix compétitifs et produits de qualité. Je recommande vivement.', note: 5 },
 ]
@@ -120,39 +120,36 @@ export default function Accueil() {
   return (
     <div style={{ overflowX: 'hidden' }}>
       <style>{`
-        @keyframes pulse   { from { transform: scale(1);   opacity: 0.4; } to { transform: scale(1.4); opacity: 0.8; } }
-        @keyframes fadeUp  { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes bounce  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .marquee-track { display: flex; animation: marquee 22s linear infinite; width: max-content; }
-        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes pulse   { from{transform:scale(1);opacity:0.5}to{transform:scale(1.5);opacity:0} }
+        @keyframes fadeUp  { from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)} }
+        @keyframes slideIn { from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)} }
+        @keyframes bounce  { 0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)} }
+        @keyframes shimmer { 0%{background-position:-200% center}100%{background-position:200% center} }
+        @keyframes marquee { from{transform:translateX(0)}to{transform:translateX(-50%)} }
+        .marquee-track { display:flex;animation:marquee 22s linear infinite;width:max-content; }
+        .marquee-track:hover { animation-play-state:paused; }
       `}</style>
 
       {/* ===== HERO ===== */}
+      {/* Photo bien visible — overlay rouge léger uniquement à gauche pour la lisibilité du texte */}
       <section className="relative text-white flex items-center min-h-[620px]"
-        style={{ backgroundImage: 'url("/formation-1.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(100deg, rgba(0,0,0,0.88) 40%, rgba(0,0,0,0.15) 100%)' }} />
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="absolute rounded-full" style={{
-              width: `${40 + i * 20}px`, height: `${40 + i * 20}px`,
-              background: 'rgba(231,76,60,0.15)',
-              left: `${10 + i * 12}%`, top: `${15 + (i % 3) * 25}%`,
-              animation: `pulse ${2 + i * 0.5}s ease-in-out infinite alternate`,
-            }} />
-          ))}
-        </div>
+        style={{ backgroundImage: 'url("/formation-1.jpg")', backgroundSize: 'cover', backgroundPosition: 'center top' }}>
+
+        {/* Overlay minimal — texte lisible, photo bien visible */}
+        <div className="absolute inset-0"
+          style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.18) 60%, rgba(0,0,0,0.0) 100%)' }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 w-full">
-          <div className="max-w-2xl">
+          <div className="max-w-xl">
+
+            {/* Badge */}
             <div style={{ opacity: heroVisible ? 1 : 0, transform: heroVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'all 0.6s ease 0.1s' }}>
-              <span className="inline-flex items-center gap-2 border border-red-400 text-red-300 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6"
-                style={{ background: 'rgba(231,76,60,0.3)' }}>
+              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6"
+                style={{ background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)' }}>
                 <Shield size={12} /> Spécialiste sécurité industrielle — Côte d'Ivoire
               </span>
             </div>
+
             <div style={{ opacity: heroVisible ? 1 : 0, transform: heroVisible ? 'translateY(0)' : 'translateY(30px)', transition: 'all 0.7s ease 0.3s' }}>
               <h1 className="font-display text-4xl md:text-6xl font-extrabold leading-tight mb-6">
                 Protégez vos équipes.<br />
@@ -165,11 +162,13 @@ export default function Accueil() {
                 }}>Sécurisez</span> vos sites.
               </h1>
             </div>
+
             <div style={{ opacity: heroVisible ? 1 : 0, transition: 'all 0.7s ease 0.5s' }}>
-              <p className="text-gray-200 text-lg leading-relaxed mb-8 max-w-xl">
+              <p className="text-gray-200 text-lg leading-relaxed mb-8 max-w-lg">
                 Équipements de sécurité certifiés pour les entreprises et industries de Côte d'Ivoire.
               </p>
             </div>
+
             <div style={{ opacity: heroVisible ? 1 : 0, transform: heroVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'all 0.7s ease 0.7s' }}>
               <div className="flex flex-wrap gap-4 mb-10">
                 <Link to="/boutique"
@@ -194,12 +193,18 @@ export default function Accueil() {
           </div>
         </div>
 
-        {/* Cards catégories flottantes */}
+        {/* Cards catégories flottantes — fond blanc semi-transparent */}
         <div className="hidden lg:grid absolute right-12 top-1/2 -translate-y-1/2 grid-cols-2 gap-3 z-10">
           {categories.map(({ nom, icon: Icon, desc, slug }, i) => (
             <Link key={nom} to={`/boutique?cat=${slug}`}
               className="flex flex-col items-center text-center p-4 rounded-xl hover:scale-105 transition-all"
-              style={{ background: 'rgba(231,76,60,0.2)', backdropFilter: 'blur(12px)', border: '1px solid rgba(231,76,60,0.4)', minWidth: '130px', animation: `fadeUp 0.6s ease ${0.4 + i * 0.15}s both` }}>
+              style={{
+                background: 'rgba(231,76,60,0.2)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(231,76,60,0.4)',
+                minWidth: '130px',
+                animation: `fadeUp 0.6s ease ${0.4 + i * 0.15}s both`,
+              }}>
               <Icon size={26} className="mb-2 text-red-300" />
               <p className="text-white text-xs font-bold mb-1">{nom}</p>
               <p className="text-red-200 text-xs">{desc}</p>
@@ -208,7 +213,7 @@ export default function Accueil() {
         </div>
 
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10" style={{ animation: 'bounce 2s ease-in-out infinite' }}>
-          <ChevronDown size={28} className="text-white opacity-60" />
+          <ChevronDown size={28} className="text-white/70" />
         </div>
       </section>
 
@@ -251,8 +256,7 @@ export default function Accueil() {
       <section className="py-20 px-6" style={{ background: '#fff5f5' }}>
         <div className="max-w-7xl mx-auto">
           <AnimSection className="text-center mb-12">
-            <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3"
-              style={{ background: '#e74c3c' }}>Nos domaines</span>
+            <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3" style={{ background: '#e74c3c' }}>Nos domaines</span>
             <h2 className="font-display text-3xl font-extrabold text-gray-900 mb-2">Une protection complète pour votre activité</h2>
             <p className="text-gray-500">Des équipements adaptés à chaque secteur industriel</p>
           </AnimSection>
@@ -263,15 +267,14 @@ export default function Accueil() {
                   className="relative rounded-2xl overflow-hidden group h-56 flex items-end shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 block"
                   style={{ border: '2px solid #fca5a5' }}>
                   <img src={img} alt={nom} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(180,0,0,0.85) 40%, rgba(0,0,0,0.0) 100%)' }} />
-                  <div className="absolute top-3 left-3 w-9 h-9 rounded-xl flex items-center justify-center shadow"
-                    style={{ background: '#e74c3c' }}>
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.0) 100%)' }} />
+                  <div className="absolute top-3 left-3 w-9 h-9 rounded-xl flex items-center justify-center shadow" style={{ background: '#e74c3c' }}>
                     <Icon size={18} className="text-white" />
                   </div>
                   <div className="relative z-10 p-4 w-full">
                     <h3 className="font-bold text-white text-sm mb-0.5">{nom}</h3>
                     <p className="text-red-200 text-xs">{desc}</p>
-                    <span className="inline-flex items-center gap-1 text-xs font-bold mt-2 opacity-0 group-hover:opacity-100 transition-opacity text-red-300">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold mt-2 opacity-0 group-hover:opacity-100 transition-opacity text-white">
                       Voir les produits <ArrowRight size={11} />
                     </span>
                   </div>
@@ -288,8 +291,7 @@ export default function Accueil() {
           <div className="max-w-7xl mx-auto">
             <AnimSection className="flex items-center justify-between mb-10">
               <div>
-                <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3"
-                  style={{ background: '#e74c3c' }}>Sélection</span>
+                <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3" style={{ background: '#e74c3c' }}>Sélection</span>
                 <h2 className="font-display text-3xl font-extrabold text-gray-900">Produits phares</h2>
               </div>
               <Link to="/boutique" className="hidden md:flex items-center gap-1.5 text-sm font-bold hover:gap-3 transition-all text-red-600">
@@ -309,8 +311,7 @@ export default function Accueil() {
                       style={{ border: '2px solid #fecaca' }}
                       onMouseEnter={e => e.currentTarget.style.borderColor = '#e74c3c'}
                       onMouseLeave={e => e.currentTarget.style.borderColor = '#fecaca'}>
-                      <div className="relative h-44 flex items-center justify-center p-4 overflow-hidden"
-                        style={{ background: '#fff5f5' }}>
+                      <div className="relative h-44 flex items-center justify-center p-4 overflow-hidden" style={{ background: '#fff5f5' }}>
                         {p.image_url ? <img src={p.image_url} alt={p.nom} className="h-full object-contain group-hover:scale-110 transition-transform duration-500" /> : <Package size={48} className="text-red-200" />}
                         {p.marques && <span className="absolute top-2 left-2 text-white text-xs font-bold px-2.5 py-1 rounded-lg" style={{ background: '#e74c3c' }}>{p.marques.nom}</span>}
                         {p.statut === 'en_stock' && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">En stock</span>}
@@ -318,9 +319,7 @@ export default function Accueil() {
                       <div className="p-4">
                         {p.categories && <p className="text-xs uppercase tracking-wide mb-1 font-bold text-red-600">{p.categories.nom}</p>}
                         <h3 className="font-bold text-gray-800 text-sm group-hover:text-red-600 transition-colors line-clamp-2 mb-3">{p.nom}</h3>
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-600">
-                          Voir les détails <ArrowRight size={11} />
-                        </span>
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-600">Voir les détails <ArrowRight size={11} /></span>
                       </div>
                     </Link>
                   </AnimSection>
@@ -343,12 +342,11 @@ export default function Accueil() {
             {imagesGalerie.map((img, i) => (
               <AnimSection key={i} delay={i * 80}
                 className={`relative rounded-2xl overflow-hidden group ${i === 0 ? 'md:row-span-2' : ''}`}
-                style={{ height: i === 0 ? '100%' : '200px', minHeight: '200px', border: '2px solid rgba(255,255,255,0.2)' }}>
+                style={{ height: i === 0 ? '100%' : '200px', minHeight: '200px', border: '2px solid rgba(255,255,255,0.25)' }}>
                 <img src={img.url} alt={img.caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: 'rgba(180,0,0,0.4)' }} />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'rgba(0,0,0,0.2)' }} />
                 <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300"
-                  style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)' }}>
+                  style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
                   <span className="text-white text-xs font-semibold">{img.caption}</span>
                 </div>
               </AnimSection>
@@ -357,13 +355,12 @@ export default function Accueil() {
         </div>
       </section>
 
-      {/* ===== APERÇU RÉALISATIONS ===== */}
+      {/* ===== RÉALISATIONS ===== */}
       <section className="py-20 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <AnimSection className="flex items-center justify-between mb-10">
             <div>
-              <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3"
-                style={{ background: '#e74c3c' }}>Portfolio</span>
+              <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3" style={{ background: '#e74c3c' }}>Portfolio</span>
               <h2 className="font-display text-3xl font-extrabold text-gray-900">Nos réalisations</h2>
               <p className="text-gray-500 mt-1">Interventions terrain pour les grandes entreprises de CI</p>
             </div>
@@ -382,10 +379,9 @@ export default function Accueil() {
                   className="relative rounded-2xl overflow-hidden group h-56 flex items-end shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block"
                   style={{ border: '2px solid #fca5a5' }}>
                   <img src={r.img} alt={r.titre} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(150,0,0,0.85) 40%, rgba(0,0,0,0.0) 100%)' }} />
-                  <div className="absolute top-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: '#ff6b6b' }} />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.0) 100%)' }} />
                   <div className="relative z-10 p-4 w-full">
-                    <span className="text-xs font-bold text-white px-2.5 py-1 rounded-full mb-2 inline-block" style={{ background: '#e74c3c' }}>{r.cat}</span>
+                    <span className="text-xs font-bold text-white px-2.5 py-1 rounded-full mb-2 inline-block" style={{ background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.4)' }}>{r.cat}</span>
                     <h3 className="font-bold text-white text-sm leading-snug">{r.titre}</h3>
                   </div>
                 </Link>
@@ -399,8 +395,7 @@ export default function Accueil() {
       <section className="py-20 px-6" style={{ background: '#fff5f5' }}>
         <div className="max-w-7xl mx-auto">
           <AnimSection className="text-center mb-12">
-            <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3"
-              style={{ background: '#e74c3c' }}>Références</span>
+            <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3" style={{ background: '#e74c3c' }}>Références</span>
             <h2 className="font-display text-3xl font-extrabold text-gray-900 mb-2">Ils nous font confiance</h2>
             <p className="text-gray-500">Des entreprises de premier plan en Côte d'Ivoire</p>
           </AnimSection>
@@ -498,8 +493,7 @@ export default function Accueil() {
       <section className="py-20 px-6" style={{ background: '#fff5f5' }}>
         <div className="max-w-7xl mx-auto">
           <AnimSection className="text-center mb-12">
-            <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3"
-              style={{ background: '#e74c3c' }}>Pourquoi nous choisir</span>
+            <span className="inline-block text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3" style={{ background: '#e74c3c' }}>Pourquoi nous choisir</span>
             <h2 className="font-display text-3xl font-extrabold text-gray-900 mb-2">La confiance de vos équipes commence ici</h2>
           </AnimSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -528,7 +522,7 @@ export default function Accueil() {
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="absolute rounded-full"
-              style={{ width: `${120 + i * 80}px`, height: `${120 + i * 80}px`, background: 'rgba(255,255,255,0.06)', top: `${i * 20}%`, left: `${i % 2 === 0 ? -5 : 80}%` }} />
+              style={{ width: `${120+i*80}px`, height: `${120+i*80}px`, background: 'rgba(255,255,255,0.06)', top: `${i*20}%`, left: `${i%2===0?-5:80}%` }} />
           ))}
         </div>
         <AnimSection className="relative z-10">
@@ -536,12 +530,10 @@ export default function Accueil() {
           <h2 className="font-display text-4xl font-extrabold mb-3">Besoin d'un équipement ou d'un devis ?</h2>
           <p className="text-red-100 mb-10 max-w-xl mx-auto text-lg">Notre équipe vous répond sous 24h avec une offre personnalisée</p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/contact"
-              className="font-bold px-8 py-4 rounded-xl bg-white text-red-600 hover:bg-gray-50 transition-all hover:scale-105 hover:shadow-2xl text-base">
+            <Link to="/contact" className="font-bold px-8 py-4 rounded-xl bg-white text-red-600 hover:bg-gray-50 transition-all hover:scale-105 hover:shadow-2xl text-base">
               Demander un devis gratuit
             </Link>
-            <Link to="/boutique"
-              className="font-bold px-8 py-4 rounded-xl border-2 border-white/80 text-white hover:bg-white hover:text-red-600 transition-all hover:scale-105 text-base">
+            <Link to="/boutique" className="font-bold px-8 py-4 rounded-xl border-2 border-white/80 text-white hover:bg-white hover:text-red-600 transition-all hover:scale-105 text-base">
               Voir la boutique
             </Link>
           </div>

@@ -1,10 +1,21 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import emailjs from '@emailjs/browser'
 import { supabase } from '../lib/supabase'
 import {
   Send, Phone, Mail, MapPin, Clock, User, Building2,
   MessageSquare, Loader2, AlertCircle, RotateCcw,
 } from 'lucide-react'
+
+// --- Configuration à personnaliser ---
+// EmailJS (https://www.emailjs.com) : crée un compte, un service, un template,
+// puis remplace les 3 valeurs ci-dessous par les tiennes.
+const EMAILJS_SERVICE_ID = 'TON_SERVICE_ID'
+const EMAILJS_TEMPLATE_ID = 'TON_TEMPLATE_ID'
+const EMAILJS_PUBLIC_KEY = 'TA_PUBLIC_KEY'
+
+// Numéro WhatsApp qui recevra les demandes, format international sans "+" ni espaces
+const WHATSAPP_NUMBER = '2250170131415'
 
 export default function Contact() {
   const [searchParams] = useSearchParams()
@@ -27,12 +38,50 @@ export default function Contact() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  function buildWhatsAppUrl() {
+    const lines = [
+      'Nouvelle demande de devis',
+      `Nom : ${form.nom}`,
+      `Email : ${form.email}`,
+      form.telephone ? `Téléphone : ${form.telephone}` : null,
+      form.entreprise ? `Entreprise : ${form.entreprise}` : null,
+      `Message : ${form.message}`,
+    ].filter(Boolean)
+    const text = encodeURIComponent(lines.join('\n'))
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`
+  }
+
+  async function sendEmailNotification() {
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          nom: form.nom,
+          email: form.email,
+          telephone: form.telephone,
+          entreprise: form.entreprise,
+          message: form.message,
+        },
+        { publicKey: EMAILJS_PUBLIC_KEY }
+      )
+    } catch (err) {
+      // On ne bloque pas la demande si l'email échoue : la donnée est déjà
+      // enregistrée dans Supabase et WhatsApp reste disponible.
+      console.error('Erreur envoi email:', err)
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
-    const { error } = await supabase.from('devis').insert([{
+    // Ouverture de WhatsApp faite en premier et de façon synchrone : certains
+    // navigateurs bloquent les popups ouverts après un délai/await.
+    const whatsappWindow = window.open(buildWhatsAppUrl(), '_blank')
+
+    const { error: dbError } = await supabase.from('devis').insert([{
       nom: form.nom,
       email: form.email,
       telephone: form.telephone,
@@ -40,11 +89,16 @@ export default function Contact() {
       message: form.message,
     }])
 
-    if (error) {
+    if (dbError) {
       setError("Une erreur est survenue. Veuillez réessayer.")
-    } else {
-      setSuccess(true)
+      if (whatsappWindow) whatsappWindow.close()
+      setLoading(false)
+      return
     }
+
+    await sendEmailNotification()
+
+    setSuccess(true)
     setLoading(false)
   }
 
